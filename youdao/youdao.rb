@@ -4,9 +4,11 @@ require 'net/http'
 require 'json'
 require 'colorize'
 
+FILENAME = File.expand_path '../dictionary', __FILE__
+
 # get youdao fanyi api key from url: http://fanyi.youdao.com/openapi?path=data-mode
-KEYFROM = # your key from
-KEY =  # your key
+KEYFROM = #key form
+KEY = #key
 
 def translate(words)
   words = words.to_s
@@ -65,7 +67,7 @@ def store_words(words, data)
   end
 
   if input  =~ /y/i
-    File.open("dictionary", 'a') do |f|
+    File.open(FILENAME, 'a') do |f|
       f.write "#{words}:"
       f.write "\t/#{data["basic"]["phonetic"]}/" if data["basic"] and data["basic"]["phonetic"]
       f.write  "\t#{data["translation"].join(" | ")}" if data["translation"]
@@ -77,7 +79,7 @@ end
 
 def stored?(words)
   word_dict = []
-  File.open("dictionary", "r") do |f|
+  File.open(FILENAME, "r") do |f|
     f.readlines.each do |e|
       word_dict << e.split(":", 2).first
     end
